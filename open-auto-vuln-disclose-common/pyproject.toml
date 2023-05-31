@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "open-auto-vuln-disclose-common"
+description = "Open Automated Vulnerability Disclosure for any repository host"
+readme = "../README.md"
+license = "Apache-2.0"
+requires-python = ">=3.7"
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Typing :: Typed",
+]
+dependencies = [
+    "Deprecated >= 1.2.6",
+    "setuptools >= 16.0",
+    # FIXME This should be able to be removed after 3.12 is released if there is a reliable API
+    # in importlib.metadata.
+    "importlib-metadata ~= 6.0.0",
+]
+dynamic = [
+    "version",
+]
+
+[project.optional-dependencies]
+test = []
+
+[project.urls]
+Homepage = "https://github.com/ossf/open-auto-vuln-disclose"
+
+[tool.hatch.version]
+path = "src/open_auto_vuln_disclose/common/version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/open-auto-vuln-disclose"]

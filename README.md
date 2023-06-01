@@ -8,6 +8,7 @@ stateDiagram-v2
     state "Disclosure Queued" as queued
     state "Disclose via PMPVR" as disclose_PMPVR
     state "Disclosed via PMPVR" as disclosed_PMPVR
+    state "Repository Archived" as repository_archived
     disclose_PMPVR --> disclosed_PMPVR:::EndState: PMPVR Disclosure
     state "Disclose via Public Pull Request" as disclose_PR
     state "Disclosed via Public Pull Request" as disclosed_PR
@@ -15,6 +16,8 @@ stateDiagram-v2
     state "Awaiting PMPVR Enable" as awaiting_PMPVR
     state repository_host_PMPVR_if_state <<choice>>
     queued --> repository_host_PMPVR_if_state
+    queued --> repository_archived:::EndState: Repository Archived
+    repository_archived --> [*]
     state repository_PMPVR_if_state <<choice>>
     repository_host_PMPVR_if_state --> repository_PMPVR_if_state: Repository Host PMPVR Supported
 
@@ -34,8 +37,8 @@ stateDiagram-v2
     %% END Disclosure Fork Conditional %%
 
     fork_repository_issues_enabled_and_PMPVR_supported_and_emails_found --> need_issue
-    fork_repository_issues_disable_or_PMPVR_unsupported_and_emails_found --> sending_emails
-    fork_repository_issues_enabled_and_PMPVR_supported_and_emails_found --> sending_emails
+    fork_repository_issues_disable_or_PMPVR_unsupported_and_emails_found --> email_send_queued
+    fork_repository_issues_enabled_and_PMPVR_supported_and_emails_found --> email_send_queued
     fork_repository_issues_disable_or_PMPVR_unsupported_and_emails_found --> issue_completed
     fork_repository_issues_enabled_and_PMPVR_supported_and_emails_not_found --> need_issue
 
@@ -63,13 +66,21 @@ stateDiagram-v2
     %% END Issue based PMPVR Request %%
 
     %% START Email Disclosure %%
-    state "Sending Email(s)" as sending_emails
+    state "Sending Email(s)" as sending_emails {
+        state "Email Send Queued" as email_send_queued
+        state "Awaiting Email Response" as awaiting_email_response
+        state "Email Phase Finished" as email_completed
+        state "Email Response - Fix Invalid" as email_fix_invalid
+        state "Email Response - Not a Vulnerability" as email_not_a_vulnerability
+        email_send_queued --> awaiting_email_response
+        awaiting_email_response --> email_fix_invalid: Response - Fix Invalid
+        awaiting_email_response --> email_not_a_vulnerability: Response - Not a Vulnerability
+    }
     sending_emails --> awaiting_email_response
-    state "Awaiting Email Response" as awaiting_email_response
+
     state "Invalid Fix" as fix_invalid
-    state "Email Phase Finished" as email_completed
-    awaiting_email_response --> fix_invalid:::EndState: Response - Fix Invalid
-    awaiting_email_response --> disclose_PR: Response - Not a Vulnerability
+    email_fix_invalid --> fix_invalid:::EndState
+    email_not_a_vulnerability --> disclose_PR
     awaiting_email_response --> email_completed: 90 Days Elapsed
     awaiting_email_response --> email_completed: All Email(s) Bounce
     awaiting_email_response --> email_completed: Response - "Please fill out..."
@@ -78,7 +89,7 @@ stateDiagram-v2
     %% END Email Disclosure %%
     fork_repository_issues_enabled_and_PMPVR_supported_and_emails_not_found --> email_completed
     awaiting_PMPVR --> [*]: Disclosed via Public Pull Request
-    awaiting_PMPVR --> [*]: Vulerability Fixed
+    awaiting_PMPVR --> [*]: Vulnerability Fixed
     issue_completed --> disclosure_join_state
     disclosure_join_state --> disclose_PR: Repository PMPVR Disabled
     disclosed_PR --> [*]

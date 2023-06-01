@@ -55,19 +55,23 @@ stateDiagram-v2
     disclosure_fork_state --> repository_issues_enabled_and_PMPVR_supported_choice
 
     %% Issue based PMPVR Request %%
-    state "Need Issue" as need_issue
-    state "Awaiting Issue" as awaiting_issue
-    need_issue --> awaiting_issue : Existing Issue Found
-    need_issue --> awaiting_issue : New Issue Created
-    state "Issue Phase Finished" as issue_completed
-    awaiting_issue --> issue_completed: Issue Closed/Deleted without Response
-    awaiting_issue --> issue_completed: Closed by "Stale Bot"
-    awaiting_issue --> issue_completed: 35 Days Elapsed
+    state "Waiting for Issue" as awaiting_issue {
+        state "Need Issue" as need_issue
+        need_issue --> need_issue: Host Unavailable
+        state "Awaiting Issue" as awaiting_issue_response
+        need_issue --> awaiting_issue_response : Existing Issue Found
+        need_issue --> awaiting_issue_response : New Issue Created
+        state "Issue Phase Finished" as issue_completed
+        awaiting_issue_response --> issue_completed: Issue Closed/Deleted without Response
+        awaiting_issue_response --> issue_completed: Closed by "Stale Bot"
+        awaiting_issue_response --> issue_completed: 35 Days Elapsed
+    }
     %% END Issue based PMPVR Request %%
 
     %% START Email Disclosure %%
     state "Sending Email(s)" as sending_emails {
         state "Email Send Queued" as email_send_queued
+        email_send_queued --> email_send_queued: Email Send Failed
         state "Awaiting Email Response" as awaiting_email_response
         state "Email Phase Finished" as email_completed
         state "Email Response - Fix Invalid" as email_fix_invalid

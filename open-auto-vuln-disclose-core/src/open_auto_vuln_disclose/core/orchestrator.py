@@ -1,14 +1,14 @@
 import asyncio
 
 from open_auto_vuln_disclose.common import Repository
-from open_auto_vuln_disclose.host.host import RepositoryHost, PMPVR
+from open_auto_vuln_disclose.host.client import RepositoryHostClient
 
 
 class DisclosureOrchestrator:
-    repository_host: RepositoryHost
+    repository_client: RepositoryHostClient
 
-    def __init__(self, repository_host: RepositoryHost):
-        self.repository_host = repository_host
+    def __init__(self, repository_host: RepositoryHostClient):
+        self.repository_client = repository_host
 
     async def do_disclosure(self, repository: Repository):
         pmpvr_disclosure_status = await self.do_pmpvr_disclosure(repository)
@@ -19,7 +19,7 @@ class DisclosureOrchestrator:
         return await asyncio.gather(pmpvr_async, email_async)
 
     async def do_pmpvr_disclosure(self, repository: Repository):
-        pmpvr = await self.repository_host.get_pmpvr()
+        pmpvr = await self.repository_client.get_pmpvr_client()
         if pmpvr is None:
             return None
         if await pmpvr.repository_supports_pmpvr(repository):

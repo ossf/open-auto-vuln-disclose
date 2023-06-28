@@ -6,7 +6,12 @@
       <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-common/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-host-github/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-host/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-email/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-email/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-common/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-core/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-host/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/open-auto-vuln-disclose-core/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="inheritedJdk" />

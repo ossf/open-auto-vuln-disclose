@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "open-auto-vuln-disclose-host"
-description = "Open Automated Vulnerability Disclosure repository host API"
+name = "open-auto-vuln-disclose-email"
+description = "Open Automated Vulnerability Disclosure email API"
 readme = "../README.md"
 license = "Apache-2.0"
 requires-python = ">=3.7"
@@ -38,7 +38,7 @@ test = []
 Homepage = "https://github.com/ossf/open-auto-vuln-disclose"
 
 [tool.hatch.version]
-path = "src/open_auto_vuln_disclose/host/version.py"
+path = "src/open_auto_vuln_disclose/common/version.py"
 
 [tool.hatch.build.targets.sdist]
 include = [

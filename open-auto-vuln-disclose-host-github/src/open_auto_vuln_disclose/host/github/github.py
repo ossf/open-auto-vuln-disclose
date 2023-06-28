@@ -1,8 +1,8 @@
 from typing import Optional
 
-from open_auto_vuln_disclose.host.host import RepositoryHost, PMPVR
+from open_auto_vuln_disclose.host.client import RepositoryHostClient, PMPVRClient
 
 
-class GitHubRepositoryHost(RepositoryHost):
-    async def get_pmpvr(self) -> Optional['PMPVR']:
+class GitHubRepositoryHost(RepositoryHostClient):
+    async def get_pmpvr_client(self) -> Optional['PMPVRClient']:
         pass
